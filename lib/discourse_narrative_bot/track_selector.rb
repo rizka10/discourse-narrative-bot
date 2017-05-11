@@ -49,7 +49,7 @@ module DiscourseNarrativeBot
             data = Store.get(@user.id)
             data[:attempted] = !current_status
 
-            if previous_status && data[:attempted] == previous_status
+            if previous_status && data[:attempted] == previous_status && !data[:skip_attempted]
               generic_replies(klass::RESET_TRIGGER, state)
             else
               $redis.del(generic_replies_key(@user))

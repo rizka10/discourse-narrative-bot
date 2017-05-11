@@ -281,6 +281,14 @@ module DiscourseNarrativeBot
 
       @post.post_analyzer.cook(@post.raw, {})
       transition = true
+      attempted_count = get_state_data(:attempted) || 0
+
+      if attempted_count < 2
+        @data[:skip_attempted] = true
+        @data[:attempted] = false
+      else
+        @data[:skip_attempted] = false
+      end
 
       if @post.post_analyzer.image_count > 0
         set_state_data(:post_id, @post.id)
@@ -312,6 +320,7 @@ module DiscourseNarrativeBot
 
       fake_delay
 
+      set_state_data(:attempted, attempted_count + 1) if !transition
       reply = reply_to(@post, raw) unless @data[:attempted] && !transition
       enqueue_timeout_job(@user)
       transition ? reply : false

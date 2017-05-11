@@ -423,11 +423,10 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         described_class.any_instance.expects(:enqueue_timeout_job).with(user)
         DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: new_post.id).select
 
-        # TODO: We're only expecting one incorrect reply
-        # expect(Post.last.raw).to eq(I18n.t(
-        #   'discourse_narrative_bot.new_user_narrative.images.like_not_found',
-        #   url: post_2.url
-        # ))
+        expect(Post.last.raw).to eq(I18n.t(
+          'discourse_narrative_bot.new_user_narrative.images.like_not_found',
+          url: post_2.url
+        ))
 
         expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
 
