@@ -298,7 +298,6 @@ en:
       cert_title: "In recognition of successful completion of the advanced user tutorial"
       title: ':arrow_up: Advanced user features'
       start_message: |-
-        Hi @%{username}, let’s cover some advanced features.
 
       edit:
         bot_created_post_raw: "@%{discobot_username} is, by far, the coolest bot I know :wink:"
