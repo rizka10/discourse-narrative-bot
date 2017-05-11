@@ -108,7 +108,7 @@ fi:
 
       onebox:
         instructions: |-
-          Voisitko nyt jakaa jonkun seuraavista linkeistä minulle? Laita vastaukseesi **linkin osoite yksin omalle rivilleen**, jolloin siitä muotoillaan automaattisesti kätevä tiivistelmälaatikko
+          Voisitko nyt jakaa jonkun seuraavista linkeistä minulle? Laita vastaukseesi **linkin osoite yksin omalle rivilleen**, jolloin siitä muotoillaan automaattisesti kätevä tiivistelmälaatikko.
 
           Kopioi linkki mobiililaitteella koskettamalla sitä hetken aikaa, tai klikkaa sitä hiiresi oikealla painikkeella:
 
@@ -153,7 +153,7 @@ fi:
           - tai käytä viestieditorin <kbd><b>B</b></kbd>- tai <kbd><i>I</i></kbd>-painiketta
 
         reply: |-
-          Hyvin tehty! HTML ja BBCode käyvät myös muotoiluun. Jos on puhtia, [tästä johdannosta](http://commonmark.org/help) opit lisää :nerd:
+          Hyvin tehty! HTML ja BBCode käyvät myös muotoiluun. Jos on puhtia, [tästä johdannosta](http://commonmark.org/help) opit lisää. :nerd:
         not_found: |-
           Pahus, en näe muotoilua viestissäsi. :pencil2:
 
@@ -209,7 +209,7 @@ fi:
 
       mention:
         instructions: |-
-          Voit haluta huomiota joltakulta, vaikket edes olisi vastaamassa heille suoraan. Mainitse hänet näppäilemällä `@` ja sen perään käyttäjänimi kokonaisuudessaan
+          Voit haluta huomiota joltakulta, vaikket edes olisi vastaamassa hänelle suoraan. Mainitse hänet näppäilemällä `@` ja sen perään käyttäjänimi kokonaisuudessaan.
 
           Mainitsepa minut **`@%{discobot_username}`** seuraavassa vastauksessasi.
         reply: |-
@@ -241,15 +241,15 @@ fi:
 
           <img src="/images/capybara-eating.gif"/>
 
-          Huomasitko, että palasit takaisin alkuun? Ruoki söpöä nälkäistä kapybaraa **vastaamalla `:herb:`-emojilla** niin sinut palautetaan automaattisesti takaisin loppuun.
+          Huomasitko, että palasit takaisin alkuun? Ruoki söpöä nälkäistä kapybaraa **vastaamalla `:herb:` -emojilla** niin sinut palautetaan automaattisesti takaisin loppuun.
         reply: |-
           Jes, löysit sen :tada:
 
           - Tarkempia hakuja voit tehdä [suurella hakusivulla](%{search_url}).
 
-          - Hyppää mihin kohtaan haluat pitkää keskustelua oikealla olevalla aikajanan avulla (alhaalla mobiilissa).
+          - Hyppää mihin kohtaan haluat pitkää keskustelua oikealla olevalla aikajanan avulla (sijaitsee mobiilissa alhaalla).
 
-          - Jos sinulla on fyysinen :keyboard:, tutki käteviä näppäinoikoteitä painamalla <kbd>?</kbd>.
+          - Jos sinulla on fyysinen :keyboard:, tarkastele käteviä näppäinoikoteitä painamalla <kbd>?</kbd>.
         not_found: |-
           Hm… sinulla vaikuttaa olevan vaikeuksia. Pahoitteluni. Haitko <img src="/images/font-awesome-search.png" width="16" height="16"> hakusanalla **kapy&#8203;bara**?
 
