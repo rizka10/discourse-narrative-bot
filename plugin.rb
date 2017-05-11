@@ -74,12 +74,14 @@ after_initialize do
 
         raise Discourse::InvalidParameters.new('date must be present') unless params[:date]&.present?
 
+        generator = CertificateGenerator.new(user, params[:date])
+
         svg =
           case params[:type]
           when 'advanced'
-            CertificateGenerator.advanced_user_track(user, params[:date])
+            generator.advanced_user_track
           else
-            CertificateGenerator.new_user_track(user, params[:date])
+            generator.new_user_track
           end
 
         respond_to do |format|
