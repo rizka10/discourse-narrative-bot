@@ -524,6 +524,21 @@ describe DiscourseNarrativeBot::TrackSelector do
             end
           end
         end
+
+        describe 'when magic 8 ball is requested' do
+          before do
+            srand(1)
+          end
+
+          it 'should create the right reply' do
+            post.update!(raw: '@discobot fortune')
+            described_class.new(:reply, user, post_id: post.id).select
+
+            expect(Post.last.raw).to eq(I18n.t('discourse_narrative_bot.magic_8_ball.result',
+              result: I18n.t("discourse_narrative_bot.magic_8_ball.answers.6")
+            ))
+          end
+        end
       end
     end
 

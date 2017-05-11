@@ -100,8 +100,10 @@ module DiscourseNarrativeBot
       raw =
         if match_data = match_trigger?(post_raw, 'roll (\d+)d(\d+)')
           DiscourseNarrativeBot::Dice.roll(match_data[1].to_i, match_data[2].to_i)
-        elsif match_data = match_trigger?(post_raw, 'quote')
+        elsif match_trigger?(post_raw, 'quote')
           DiscourseNarrativeBot::QuoteGenerator.generate(@user)
+        elsif match_trigger?(post_raw, 'fortune')
+          DiscourseNarrativeBot::Magic8Ball.generate_answer
         elsif display_help
           if public_reply?
             key = "#{PUBLIC_DISPLAY_BOT_HELP_KEY}:#{@post.topic_id}"
@@ -122,7 +124,7 @@ module DiscourseNarrativeBot
 
       if raw
         fake_delay
-        reply_to(@post, raw)
+        reply_to(@post, raw, skip_validations: true)
       end
     end
 
@@ -145,7 +147,7 @@ module DiscourseNarrativeBot
         tracks: tracks.join(', ')
       )
 
-      message << "\n\n#{I18n.t(i18n_key('random_mention.bot_actions'), discobot_username: discobot_username)}"
+      message << "\n\n#{I18n.t(i18n_key('random_mention.bot_actions'), discobot_username: discobot_username, magic_8_ball_reply: Magic8Ball.generate_answer)}"
     end
 
     def generic_replies_key(user)
