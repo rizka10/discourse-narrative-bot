@@ -263,7 +263,7 @@ en:
         instructions: |-
           _psst_ … I’ve hidden a surprise in one of my previous replies. If you’re up for the challenge, **select the search icon** <img src="/images/font-awesome-search.png" width="16" height="16"> at the top right &#8599; to search for it.
 
-          <small>Try searching for the term "capy&#8203;bara" in this topic</small>
+          Try searching for the term "capy&#8203;bara" in this topic
         hidden_message: |-
           How did you miss this capybara? :wink:
 
@@ -319,7 +319,7 @@ en:
         instructions: |-
           If you’d like to withdraw a post you made, you can delete it.
 
-          Go ahead and **delete** any of your posts above by using the <img src="/images/font-awesome-trash.png" width="16" height="16"> **delete** action.
+          Go ahead and **delete** any of your posts above by using the <img src="/images/font-awesome-trash.png" width="16" height="16"> **delete** action. Don’t delete the first post, though!
         not_found: |-
           I don’t see any deleted posts yet? Remember <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> show more will reveal <img src="/images/font-awesome-trash.png" width="16" height="16"> delete.
         reply: |-
