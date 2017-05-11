@@ -116,9 +116,9 @@ en:
         second_response: |-
           Aw, sorry. I’m still not getting it. :anguished:
 
-          It’s not you – it’s me. I blame my programmers! They’re terrible!
+          I’m just a bot, but if you’d like to reach a real person, see [our contact page](/about).
 
-          Perhaps let’s start over? Say `%{reset_trigger}` to start over. In the meantime, I’ll stay out of your way.
+          In the meantime, I’ll stay out of your way.
 
     new_user_narrative:
       cert_title: "In recognition of successful completion of the new user tutorial"
