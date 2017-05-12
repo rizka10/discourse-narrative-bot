@@ -11,7 +11,6 @@ new_user_narrative_badge = Badge.find_by(name: DiscourseNarrativeBot::NewUserNar
 unless new_user_narrative_badge
   new_user_narrative_badge = Badge.create!(
     name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME,
-    description: "Completed Discourse narrative bot's new user track",
     badge_type_id: 3
   )
 end
@@ -21,14 +20,20 @@ advanced_user_narrative_badge = Badge.find_by(name: DiscourseNarrativeBot::Advan
 unless advanced_user_narrative_badge
   advanced_user_narrative_badge = Badge.create!(
     name: DiscourseNarrativeBot::AdvancedUserNarrative::BADGE_NAME,
-    description: "Completed Discourse narrative bot's advanced user track",
     badge_type_id: 2
   )
 end
 
-[new_user_narrative_badge, advanced_user_narrative_badge].each do |badge|
+badge_grouping = BadgeGrouping.find(1)
+
+[
+  [new_user_narrative_badge, I18n.t('badges.certified.description')],
+  [advanced_user_narrative_badge, I18n.t('badges.licensed.description')]
+].each do |badge, description|
+
   badge.update!(
-    badge_grouping: BadgeGrouping.find(1),
+    badge_grouping: badge_grouping,
+    description: description,
     system: true
   )
 end

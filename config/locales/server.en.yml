@@ -5,6 +5,18 @@ en:
     discourse_narrative_bot_ignored_usernames: "Usernames that the Discourse Narrative Bot should ignore"
     discourse_narrative_bot_disable_public_replies: "Disable public replies by Discourse Narrative Bot"
 
+  badges:
+    certified:
+      name: Certified
+      description: "Completed our new user tutorial"
+      long_description: |
+        This badge is granted when you've completed our new user tutorial.
+    licensed:
+      name: Licensed
+      description: "Completed our advanced user tutorial"
+      long_description: |
+        This badge is granted when you've completed our advanced user tutorial.
+
   discourse_narrative_bot:
     bio: "Hi, I’m not a real person. I’m a bot. To interact with me, send me a message or mention **`@%{discobot_username}`** anywhere."
 
