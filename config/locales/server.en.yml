@@ -111,7 +111,7 @@ en:
 
       random_mention:
         reply: |-
-          Did someone call for me? Find out what I can do with `@%{discobot_username} %{help_trigger}`.
+          Hi! To find out what I can do, say `@%{discobot_username} %{help_trigger}`.
         tracks: |-
           Hi! I currently know how to do the following things:
 
@@ -125,7 +125,7 @@ en:
           > :left_speech_bubble: _Carry out a random act of kindness, with no expectation of reward, safe in the knowledge that one day someone might do the same for you_ &mdash; Princess Diana
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Cannot predict now
+          > :crystal_ball: You may rely on it
 
       do_not_understand:
         first_response: |-
