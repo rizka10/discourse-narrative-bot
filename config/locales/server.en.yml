@@ -34,7 +34,7 @@ en:
 
     dice:
       invalid: |-
-        I'm sorry, it is mathematically impossible to roll the combination of dice which you've requested.
+        I’m sorry, it is mathematically impossible to roll that combination of dice. :confounded:
       not_enough_dice: |-
         I only have %{num_of_dice} dice. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!
       out_of_range: |-
@@ -63,7 +63,7 @@ en:
         author: "Forrest Gump’s Mom"
       "7":
         quote: "That’s one small step for a man, a giant leap for mankind."
-        author: Neil Armstrong
+        author: "Neil Armstrong"
       "8":
         quote: "Do one thing every day that scares you."
         author: "Eleanor Roosevelt"
@@ -71,8 +71,8 @@ en:
         quote: "Mistakes are always forgivable, if one has the courage to admit them."
         author: "Bruce Lee"
       "10":
-        quote: 'Whatever the mind of man can conceive and believe, it can achieve.'
-        author: 'Napoleon Hill'
+        quote: "Whatever the mind of man can conceive and believe, it can achieve."
+        author: "Napoleon Hill"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
 
