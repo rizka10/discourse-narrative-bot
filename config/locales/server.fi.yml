@@ -5,7 +5,19 @@ fi:
     discourse_narrative_bot_ignored_usernames: "Käyttäjänimet, jotka botin tulisi jättää huomiotta"
     discourse_narrative_bot_disable_public_replies: "Estä bottia vastaamasta julkisesti ketjuihin"
 
-  discourse_narrative_bot:
+  badges:
+    certified:
+      name: Tutkinto plakkarissa
+      description: "Suoritti peruskurssin"
+      long_description: |
+        Tämä ansiomerkki myönnetään, kun suoritat menestyksellä vuorovaikutteisen palstan käytön peruskurssin. Otit tavoitteeksesi hallita tavallisimmat toiminnot, ja nyt sinulla on siitä todistus!
+    licensed:
+      name: Pätevyytensä osoittanut
+      description: "Suoritti jatkokurssin"
+      long_description: |
+        Tämä ansiomerkki myönnetään, kun suoritat  menestyksellä vuorovaikutteisen palstan käytön jatkokurssin. Olet omaksunut edistyneemmätkin toiminnot, ja olet taitosi osoittanut.
+
+discourse_narrative_bot:
     bio: "Moi! En ole ihminen. Olen botti. Jos haluat jutella, lähetä yksityisviesti tai mainitse **`@%{discobot_username}`** missä vain."
 
     timeout:
@@ -21,8 +33,9 @@ fi:
         Jos et viitsi, sekin on ihan okei. Olen robotti. Minulla ei ole tunteita. :sob:
 
     dice:
+      trigger: "heitä"
       invalid: |-
-        Pahoittelen, mutta on matemaattinen mahdottomuus heittää noppia sillä tavalla kuin pyysit.
+        Pahoittelen, mutta on matemaattinen mahdottomuus heittää noppia sillä tavalla kuin pyysit. :confounded:
       not_enough_dice: |-
         Minulla on vain %{num_of_dice} noppaa. [Häpeällistä](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), tiedän!
       out_of_range: |-
@@ -31,6 +44,7 @@ fi:
         > :game_die: %{results}
 
     quote:
+      trigger: "sitaatti"
       "1":
         quote: "Tutki parhaita kirjailijoita siten avartaaksesi mielikuvituksesi piiriä."
         author: "Aleksis Kivi"
@@ -64,19 +78,54 @@ fi:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
 
+    magic_8_ball:
+      trigger: 'ennustus'
+      answers:
+        "1": "Se on varmaakin varmempaa"
+        "2": "Niin on tapahtuva"
+        "3": "Epäilemättä"
+        "4": "Kyllä, ehdottomasti"
+        "5": "Voit laskea sen varaan"
+        "6": "Näkemykseni on, että kyllä"
+        "7": "Todennäköisesti"
+        "8": "Siltä näyttäisi"
+        "9": "Kyllä"
+        "10": "Merkit viittaavat siihen suuntaan"
+        "11": "Näky epäselvä, yritä uudelleen"
+        "12": "Palaa myöhemmin asiaan"
+        "13": "Parempi, etten kerro vielä"
+        "14": "En pysty sanomaan juuri nyt"
+        "15": "Keskity ja kyse sitten uudelleen"
+        "16": "Älä laske sen varaan"
+        "17": "Vastaukseni on ei"
+        "18": "Lähteeni kertovat, että ei"
+        "19": "Ei siltä vaikuta"
+        "20": "Epäilen sitä vahvasti"
+      result: |-
+        > :crystal_ball: %{result}
+
     track_selector:
       random_mention:
+        reset_trigger: 'aloita'
+        skip_trigger: 'ohita'
+        help_trigger: 'apua'
+
+        reply: |-
+          Kutsuiko joku minua? Kysy mitä osaan tehdä kirjoittamalla `@%{discobot_username} %{help_trigger}`.
         tracks: |-
           Moi! Osaan nykyisellään seuraavat jutut:
 
           `@%{discobot_username} %{reset_trigger} %{default_track}`
           > Aloittaa yhden seuraavista opastetuista kierroksista: %{tracks}.
         bot_actions: |-
-          `@%{discobot_username} roll 2d6`
+          `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: dice roll: 3, 6
 
-          `@%{discobot_username} quote`
+          `@%{discobot_username} %{quote_trigger}`
           > :left_speech_bubble: _Carry out a random act of kindness, with no expectation of reward, safe in the knowledge that one day someone might do the same for you_ &mdash; Prinsessa Diana
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: En pysty sanomaan juuri nyt
 
       do_not_understand:
         first_response: |-
@@ -88,12 +137,13 @@ fi:
         second_response: |-
           Voi ei, en vieläkään tajua. :anguished:
 
-          Se ei johdu sinusta vaan minusta. Syytän ohjelmoijiani! He ovat surkeita!
+          Olen kuitenkin vain botti. Jos haluat tavoittaa aidon ihmisen, katsopa [yhteystietoja tältä sivulta](/about).
 
-          Mitä jos aloitettaisiin alusta? Palaa alkuun sanomalla `@%{discobot_username} %{reset_trigger}`. Sitä odotellessa en vaivaa sinua.
+          En häiritse sinua enempää nyt.
 
     new_user_narrative:
-      cert_title: "Tunnustuksena uuden käyttäjän opastuskurssin menestyksekkäästä suorittamisesta"
+      reset_trigger: "peruskurssi"
+      cert_title: "Tunnustuksena palstan käytön peruskurssin menestyksekkäästä suorittamisesta"
 
       hello:
         title: ":robot: Tervehdys!"
@@ -233,9 +283,9 @@ fi:
 
       search:
         instructions: |-
-          _psst_ … Tein jekun yhteen aiemmista vastauksistani. Jos olet valmis ottamaan haasteen vastaan, **valitse hakukuvake** <img src="/images/font-awesome-search.png" width="16" height="16"> at the top right &#8599; to search for it.
+          _psst_ … Tein jekun yhteen aiemmista vastauksistani. Jos olet valmis ottamaan haasteen vastaan, oikealla ylhäällä &#8599; on **hakukuvake** <img src="/images/font-awesome-search.png" width="16" height="16">, jolla voit yrittää löytää sen.
 
-          <small>Etsi hakusanaa "kapy&#8203;bara" tästä ketjusta</small>
+          Etsi hakusanaa "kapy&#8203;bara" tästä ketjusta
         hidden_message: |-
           Miten sinulta jäi tämä kapybara huomaamatta? :wink:
 
@@ -264,13 +314,16 @@ fi:
           (Jos haluat vielä jutella kanssani ja oppia lisää, lähetä minulle `@%{discobot_username}` yksityisviesti tai mainitse minut koska vain!)
 
       certificate:
-        alt: 'Kunniakirja'
+        alt: 'Diplomi'
 
     advanced_user_narrative:
-      cert_title: "Tunnustuksena edistyneen käyttäjän opastuskurssin menestyksekkäästä suorittamisesta"
-      title: ':arrow_up: Edistyneet toiminnot'
+      reset_trigger: 'jatkokurssi'
+      cert_title: "Tunnustuksena palstan käytön jatkokurssin menestyksekkäästä suorittamisesta"
+      title: ':arrow_up: Jatkokurssi'
       start_message: |-
-        Moi @%{username}, käydään läpi edistyneempiä toimintoja.
+        _Edistynyt_ käyttäjä kun olet, oletko @%{username} jo käynyt [käyttäasetussivulla](/my/preferences)? Siellä voit mukauttaa sivustoa makusi mukaan monilla tavoin, esimerkiksi valita tumman ja vaalean teeman väliltä.
+        
+        Vaan eipä harhauduta asiasta vaan aloitetaan!
 
       edit:
         bot_created_post_raw: "@%{discobot_username} on ylivoimaisesti mahtavin botti, jonka tiedän. :wink:"
@@ -291,7 +344,7 @@ fi:
         instructions: |-
           Jos haluat perua viestisi, voit poistaa sen.
 
-          Anna mennä ja **poista** yltä mikä tahansa viestisi <img src="/images/font-awesome-trash.png" width="16" height="16"> poista-toiminnon avulla.
+          Anna mennä ja **poista** yltä mikä tahansa viestisi <img src="/images/font-awesome-trash.png" width="16" height="16"> poista-toiminnon avulla. Älä kuitenkaan erehdy poistamaan ketjun ensimmäistä viestiä!
         not_found: |-
           Minusta viestejä ei vielä poistettu? Muista, että <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> näytä lisää -kuvake paljastaa <img src="/images/font-awesome-trash.png" width="16" height="16"> poista-kuvakkeen.
         reply: |-
@@ -390,4 +443,4 @@ fi:
 
           Kuulemiin! Jos haluat vielä jutella kanssani, lähetä viesti milloin vain! :sunglasses:
       certificate:
-        alt: 'Edistyneen käyttäjän kunniakirja'
+        alt: 'Diplomi jatkokurssista'
