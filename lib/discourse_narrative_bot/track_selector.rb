@@ -147,7 +147,7 @@ module DiscourseNarrativeBot
         tracks: tracks.join(', ')
       )
 
-      message << "\n\n#{I18n.t(i18n_key('random_mention.bot_actions'), discobot_username: discobot_username, magic_8_ball_reply: Magic8Ball.generate_answer)}"
+      message << "\n\n#{I18n.t(i18n_key('random_mention.bot_actions'), discobot_username: discobot_username)}"
     end
 
     def generic_replies_key(user)
