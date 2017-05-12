@@ -96,7 +96,6 @@ module DiscourseNarrativeBot
     }
 
     RESET_TRIGGER = 'advanced user'.freeze
-    TIMEOUT_DURATION = 900 # 15 mins
 
     def self.can_start?(user)
       return true if user.staff?
@@ -378,21 +377,6 @@ module DiscourseNarrativeBot
       else
         DistributedMutex.synchronize("advanced_user_narrative_#{user.id}") { yield }
       end
-    end
-
-    def cancel_timeout_job(user)
-      Jobs.cancel_scheduled_job(:narrative_timeout, user_id: user.id, klass: self.class.to_s)
-    end
-
-    def enqueue_timeout_job(user)
-      return if Rails.env.test?
-
-      cancel_timeout_job(user)
-
-      Jobs.enqueue_in(TIMEOUT_DURATION, :narrative_timeout,
-        user_id: user.id,
-        klass: self.class.to_s
-      )
     end
   end
 end

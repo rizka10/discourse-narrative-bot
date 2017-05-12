@@ -2,6 +2,8 @@ module DiscourseNarrativeBot
   class Base
     include Actions
 
+    TIMEOUT_DURATION = 900 # 15 mins
+
     class InvalidTransitionError < StandardError; end
 
     def input(input, user, post: nil, topic_id: nil, skip: false)
@@ -155,6 +157,21 @@ module DiscourseNarrativeBot
 
     def valid_topic?(topic_id)
       topic_id == @data[:topic_id]
+    end
+
+    def cancel_timeout_job(user)
+      Jobs.cancel_scheduled_job(:narrative_timeout, user_id: user.id, klass: self.class.to_s)
+    end
+
+    def enqueue_timeout_job(user)
+      return if Rails.env.test?
+
+      cancel_timeout_job(user)
+
+      Jobs.enqueue_in(TIMEOUT_DURATION, :narrative_timeout,
+        user_id: user.id,
+        klass: self.class.to_s
+      )
     end
 
     def not_implemented
