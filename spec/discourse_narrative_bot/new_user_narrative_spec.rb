@@ -20,7 +20,8 @@ describe DiscourseNarrativeBot::NewUserNarrative do
   let(:other_topic) { Fabricate(:topic) }
   let(:other_post) { Fabricate(:post, topic: other_topic) }
   let(:profile_page_url) { "#{Discourse.base_url}/users/#{user.username}" }
-  let(:skip_trigger) { "#{DiscourseNarrativeBot::TrackSelector::SKIP_TRIGGER}" }
+  let(:skip_trigger) { DiscourseNarrativeBot::TrackSelector.skip_trigger }
+  let(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   describe '#notify_timeout' do
     before do
@@ -37,8 +38,8 @@ describe DiscourseNarrativeBot::NewUserNarrative do
       expect(Post.last.raw).to eq(I18n.t(
         'discourse_narrative_bot.timeout.message',
         username: user.username,
-        skip_trigger: DiscourseNarrativeBot::TrackSelector::SKIP_TRIGGER,
-        reset_trigger: "#{DiscourseNarrativeBot::TrackSelector::RESET_TRIGGER} #{described_class::RESET_TRIGGER}",
+        skip_trigger: skip_trigger,
+        reset_trigger: "#{reset_trigger} #{described_class.reset_trigger}",
       ))
     end
   end

@@ -93,8 +93,8 @@ module DiscourseNarrativeBot
       if post = Post.find_by(id: @data[:last_post_id])
         reply_to(post, I18n.t("discourse_narrative_bot.timeout.message",
           username: user.username,
-          skip_trigger: TrackSelector::SKIP_TRIGGER,
-          reset_trigger: "#{TrackSelector::RESET_TRIGGER} #{self.class::RESET_TRIGGER}",
+          skip_trigger: TrackSelector.skip_trigger,
+          reset_trigger: "#{TrackSelector.reset_trigger} #{self.class.reset_trigger}",
         ))
       end
     end

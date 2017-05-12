@@ -95,11 +95,13 @@ module DiscourseNarrativeBot
       }
     }
 
-    RESET_TRIGGER = 'advanced user'.freeze
-
     def self.can_start?(user)
       return true if user.staff?
       user.badges.where(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?
+    end
+
+    def self.reset_trigger
+      I18n.t('discourse_narrative_bot.advanced_user_narrative.reset_trigger')
     end
 
     def reset_bot(user, post)

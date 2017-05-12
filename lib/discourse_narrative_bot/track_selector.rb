@@ -10,9 +10,6 @@ module DiscourseNarrativeBot
       AdvancedUserNarrative
     ]
 
-    RESET_TRIGGER = 'start'.freeze
-    SKIP_TRIGGER = 'skip'.freeze
-
     TOPIC_ACTIONS = [
       :delete,
       :topic_notification_level_changed
@@ -42,7 +39,7 @@ module DiscourseNarrativeBot
           if is_reply && like_user_post
             Store.set(@user.id, data.merge!(state: nil, topic_id: nil))
           elsif state&.to_sym == :end && is_reply
-            bot_commands(bot_mentioned?) || generic_replies(klass::RESET_TRIGGER)
+            bot_commands(bot_mentioned?) || generic_replies(klass.reset_trigger)
           elsif is_reply
             previous_status = data[:attempted]
             current_status = klass.new.input(@input, @user, post: @post, skip: skip_track?)
@@ -50,7 +47,7 @@ module DiscourseNarrativeBot
             data[:attempted] = !current_status
 
             if previous_status && data[:attempted] == previous_status && !data[:skip_attempted]
-              generic_replies(klass::RESET_TRIGGER, state)
+              generic_replies(klass.reset_trigger, state)
             else
               $redis.del(generic_replies_key(@user))
             end
@@ -67,6 +64,30 @@ module DiscourseNarrativeBot
         klass = (data[:track] || NewUserNarrative.to_s).constantize
         klass.new.input(@input, @user, post: @post, topic_id: @topic_id)
       end
+    end
+
+    def self.reset_trigger
+      I18n.t(i18n_key("reset_trigger"))
+    end
+
+    def self.skip_trigger
+      I18n.t(i18n_key("skip_trigger"))
+    end
+
+    def self.help_trigger
+      I18n.t(i18n_key("help_trigger"))
+    end
+
+    def self.quote_trigger
+      I18n.t("discourse_narrative_bot.quote.trigger")
+    end
+
+    def self.dice_trigger
+      I18n.t("discourse_narrative_bot.dice.trigger")
+    end
+
+    def self.magic_8_ball_trigger
+      I18n.t("discourse_narrative_bot.magic_8_ball.trigger")
     end
 
     private
@@ -91,24 +112,25 @@ module DiscourseNarrativeBot
 
     def selected_track(klass)
       return if klass.respond_to?(:can_start?) && !klass.can_start?(@user)
-      match_trigger?(@post.raw, "#{RESET_TRIGGER} #{klass::RESET_TRIGGER}")
+      match_trigger?(@post.raw, "#{self.class.reset_trigger} #{klass.reset_trigger}")
     end
 
     def bot_commands(hint = true)
       post_raw = @post.raw
 
       raw =
-        if match_data = match_trigger?(post_raw, 'roll (\d+)d(\d+)')
+        if match_data = match_trigger?(post_raw, "#{self.class.dice_trigger} (\\d+)d(\\d+)")
           DiscourseNarrativeBot::Dice.roll(match_data[1].to_i, match_data[2].to_i)
-        elsif match_trigger?(post_raw, 'quote')
+        elsif match_trigger?(post_raw, self.class.quote_trigger)
           DiscourseNarrativeBot::QuoteGenerator.generate(@user)
-        elsif match_trigger?(post_raw, 'fortune')
+        elsif match_trigger?(post_raw, self.class.magic_8_ball_trigger)
           DiscourseNarrativeBot::Magic8Ball.generate_answer
-        elsif match_trigger?(post_raw, 'help')
+        elsif match_trigger?(post_raw, self.class.help_trigger)
           help_message
         elsif hint
-          message = I18n.t(i18n_key('random_mention.reply'),
-            discobot_username: self.class.discobot_user.username
+          message = I18n.t(self.class.i18n_key('random_mention.reply'),
+            discobot_username: self.class.discobot_user.username,
+            help_trigger: self.class.help_trigger
           )
 
           if public_reply?
@@ -135,48 +157,53 @@ module DiscourseNarrativeBot
     end
 
     def help_message
-      tracks = [NewUserNarrative::RESET_TRIGGER]
+      tracks = [NewUserNarrative.reset_trigger]
 
       if @user.staff? ||
          @user.badges.where(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?
 
-        tracks << AdvancedUserNarrative::RESET_TRIGGER
+        tracks << AdvancedUserNarrative.reset_trigger
       end
 
       discobot_username = self.class.discobot_user.username
 
       message = I18n.t(
-        i18n_key('random_mention.tracks'),
+        self.class.i18n_key('random_mention.tracks'),
         discobot_username: discobot_username,
-        reset_trigger: RESET_TRIGGER,
-        default_track: NewUserNarrative::RESET_TRIGGER,
+        reset_trigger: self.class.reset_trigger,
+        default_track: NewUserNarrative.reset_trigger,
         tracks: tracks.join(', ')
       )
 
-      message << "\n\n#{I18n.t(i18n_key('random_mention.bot_actions'), discobot_username: discobot_username)}"
+      message << "\n\n#{I18n.t(self.class.i18n_key('random_mention.bot_actions'),
+        discobot_username: discobot_username,
+        dice_trigger: self.class.dice_trigger,
+        quote_trigger: self.class.quote_trigger,
+        magic_8_ball_trigger: self.class.magic_8_ball_trigger
+      )}"
     end
 
     def generic_replies_key(user)
       "#{GENERIC_REPLIES_COUNT_PREFIX}#{user.id}"
     end
 
-    def generic_replies(reset_trigger, state = nil)
-      reset_trigger = "#{RESET_TRIGGER} #{reset_trigger}"
+    def generic_replies(track_reset_trigger, state = nil)
+      reset_trigger = "#{self.class.reset_trigger} #{track_reset_trigger}"
       key = generic_replies_key(@user)
       count = ($redis.get(key) || $redis.setex(key, 900, 0)).to_i
 
       case count
       when 0
-        raw = I18n.t(i18n_key('do_not_understand.first_response'))
+        raw = I18n.t(self.class.i18n_key('do_not_understand.first_response'))
 
         if state && state.to_sym != :end
-          raw = "#{raw}\n\n#{I18n.t(i18n_key('do_not_understand.track_response'), reset_trigger: reset_trigger, skip_trigger: SKIP_TRIGGER)}"
+          raw = "#{raw}\n\n#{I18n.t(self.class.i18n_key('do_not_understand.track_response'), reset_trigger: reset_trigger, skip_trigger: self.class.skip_trigger)}"
         end
 
         reply_to(@post, raw)
       when 1
-        reply_to(@post, I18n.t(i18n_key('do_not_understand.second_response'),
-          reset_trigger: reset_trigger
+        reply_to(@post, I18n.t(self.class.i18n_key('do_not_understand.second_response'),
+          reset_trigger: self.class.reset_trigger
         ))
       else
         # Stay out of the user's way
@@ -185,7 +212,7 @@ module DiscourseNarrativeBot
       $redis.incr(key)
     end
 
-    def i18n_key(key)
+    def self.i18n_key(key)
       "discourse_narrative_bot.track_selector.#{key}"
     end
 
@@ -193,8 +220,8 @@ module DiscourseNarrativeBot
       if pm_to_bot?(@post)
         post_raw = @post.raw
 
-        post_raw.match(/^@#{self.class.discobot_user.username} #{SKIP_TRIGGER}/i) ||
-          post_raw.strip == SKIP_TRIGGER
+        post_raw.match(/^@#{self.class.discobot_user.username} #{self.class.skip_trigger}/i) ||
+          post_raw.strip == self.class.skip_trigger
       else
         false
       end

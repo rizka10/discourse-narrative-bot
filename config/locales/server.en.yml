@@ -33,6 +33,7 @@ en:
         If you’d rather not, that’s OK too. I’m a robot. You won’t hurt my feelings. :sob:
 
     dice:
+      trigger: "roll"
       invalid: |-
         I’m sorry, it is mathematically impossible to roll that combination of dice. :confounded:
       not_enough_dice: |-
@@ -43,6 +44,7 @@ en:
         > :game_die: %{results}
 
     quote:
+      trigger: "quote"
       "1":
         quote: "In the middle of every difficulty lies opportunity"
         author: "Albert Einstein"
@@ -77,6 +79,7 @@ en:
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
 
     magic_8_ball:
+      trigger: 'fortune'
       answers:
         "1": "It is certain"
         "2": "It is decidedly so"
@@ -102,22 +105,26 @@ en:
         > :crystal_ball: %{result}
 
     track_selector:
+      reset_trigger: 'start'
+      skip_trigger: 'skip'
+      help_trigger: 'display help'
+
       random_mention:
         reply: |-
-          Did someone call for me? Find out what I can do with `@%{discobot_username} help`.
+          Did someone call for me? Find out what I can do with `@%{discobot_username} %{help_trigger}`.
         tracks: |-
           Hi! I currently know how to do the following things:
 
           `@%{discobot_username} %{reset_trigger} %{default_track}`
           > Starts one of the following interactive narratives: %{tracks}.
         bot_actions: |-
-          `@%{discobot_username} roll 2d6`
+          `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
 
-          `@%{discobot_username} quote`
+          `@%{discobot_username} %{quote_trigger}`
           > :left_speech_bubble: _Carry out a random act of kindness, with no expectation of reward, safe in the knowledge that one day someone might do the same for you_ &mdash; Princess Diana
 
-          `@%{discobot_username} fortune`
+          `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Cannot predict now
 
       do_not_understand:
@@ -135,6 +142,7 @@ en:
           In the meantime, I’ll stay out of your way.
 
     new_user_narrative:
+      reset_trigger: "new user"
       cert_title: "In recognition of successful completion of the new user tutorial"
 
       hello:
@@ -309,6 +317,7 @@ en:
         alt: 'Certificate of Achievement'
 
     advanced_user_narrative:
+      reset_trigger: 'advanced user'
       cert_title: "In recognition of successful completion of the advanced user tutorial"
       title: ':arrow_up: Advanced user features'
       start_message: |-

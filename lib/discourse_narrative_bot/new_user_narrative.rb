@@ -109,8 +109,11 @@ module DiscourseNarrativeBot
       }
     }
 
-    RESET_TRIGGER = 'new user'.freeze
     SEARCH_ANSWER = ':herb:'.freeze
+
+    def self.reset_trigger
+      I18n.t('discourse_narrative_bot.new_user_narrative.reset_trigger')
+    end
 
     def reset_bot(user, post)
       if pm_to_bot?(post)
@@ -495,7 +498,7 @@ module DiscourseNarrativeBot
           base_url: Discourse.base_url,
           certificate: certificate,
           discobot_username: self.class.discobot_user.username,
-          advanced_trigger: AdvancedUserNarrative::RESET_TRIGGER
+          advanced_trigger: AdvancedUserNarrative.reset_trigger
         ),
         topic_id: @data[:topic_id]
       )

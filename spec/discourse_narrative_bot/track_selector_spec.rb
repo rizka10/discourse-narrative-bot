@@ -7,7 +7,8 @@ describe DiscourseNarrativeBot::TrackSelector do
 
   let(:random_mention_reply) do
     I18n.t('discourse_narrative_bot.track_selector.random_mention.reply',
-     discobot_username: discobot_user.username
+     discobot_username: discobot_user.username,
+     help_trigger: described_class.help_trigger
     )
   end
 
@@ -18,14 +19,17 @@ describe DiscourseNarrativeBot::TrackSelector do
     #{I18n.t(
       'discourse_narrative_bot.track_selector.random_mention.tracks',
       discobot_username: discobot_username,
-      default_track: DiscourseNarrativeBot::NewUserNarrative::RESET_TRIGGER,
-      reset_trigger: described_class::RESET_TRIGGER,
-      tracks: DiscourseNarrativeBot::NewUserNarrative::RESET_TRIGGER
+      default_track: DiscourseNarrativeBot::NewUserNarrative.reset_trigger,
+      reset_trigger: described_class.reset_trigger,
+      tracks: DiscourseNarrativeBot::NewUserNarrative.reset_trigger
     )}
 
     #{I18n.t(
       'discourse_narrative_bot.track_selector.random_mention.bot_actions',
       discobot_username: discobot_username,
+      dice_trigger: described_class.dice_trigger,
+      quote_trigger: described_class.quote_trigger,
+      magic_8_ball_trigger: described_class.magic_8_ball_trigger
     )}
     RAW
 
@@ -86,13 +90,13 @@ describe DiscourseNarrativeBot::TrackSelector do
             expected_raw = <<~RAW
             #{I18n.t(
               'discourse_narrative_bot.track_selector.do_not_understand.first_response',
-              reset_trigger: "#{described_class::RESET_TRIGGER} #{DiscourseNarrativeBot::NewUserNarrative::RESET_TRIGGER}",
+              reset_trigger: "#{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}",
             )}
 
             #{I18n.t(
               'discourse_narrative_bot.track_selector.do_not_understand.track_response',
-              reset_trigger: "#{described_class::RESET_TRIGGER} #{DiscourseNarrativeBot::NewUserNarrative::RESET_TRIGGER}",
-              skip_trigger: described_class::SKIP_TRIGGER
+              reset_trigger: "#{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}",
+              skip_trigger: described_class.skip_trigger
             )}
             RAW
 
@@ -124,7 +128,7 @@ describe DiscourseNarrativeBot::TrackSelector do
         context 'when reply contains a reset trigger' do
           it 'should start/reset the track' do
             post.update!(
-              raw: "#{DiscourseNarrativeBot::TrackSelector::RESET_TRIGGER} #{DiscourseNarrativeBot::NewUserNarrative::RESET_TRIGGER}"
+              raw: "#{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}"
             )
 
             described_class.new(:reply, user, post_id: post.id).select
@@ -136,7 +140,7 @@ describe DiscourseNarrativeBot::TrackSelector do
           context 'start/reset advanced track' do
             before do
               post.update!(
-                raw: "@#{discobot_user.username} #{DiscourseNarrativeBot::TrackSelector::RESET_TRIGGER} #{DiscourseNarrativeBot::AdvancedUserNarrative::RESET_TRIGGER}"
+                raw: "@#{discobot_user.username} #{described_class.reset_trigger} #{DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}"
               )
             end
 
@@ -186,7 +190,7 @@ describe DiscourseNarrativeBot::TrackSelector do
 
             expect(new_post.raw).to eq(I18n.t(
               'discourse_narrative_bot.track_selector.do_not_understand.first_response',
-              reset_trigger: "#{described_class::RESET_TRIGGER} #{DiscourseNarrativeBot::NewUserNarrative::RESET_TRIGGER}",
+              reset_trigger: "#{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}",
             ))
 
             described_class.new(:reply, user, post_id: Fabricate(:post,
@@ -199,7 +203,7 @@ describe DiscourseNarrativeBot::TrackSelector do
 
             expect(new_post.raw).to eq(I18n.t(
               'discourse_narrative_bot.track_selector.do_not_understand.second_response',
-              reset_trigger: "#{described_class::RESET_TRIGGER} #{DiscourseNarrativeBot::NewUserNarrative::RESET_TRIGGER}",
+              reset_trigger: "#{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}",
             ))
 
             new_post = Fabricate(:post,
@@ -224,7 +228,7 @@ describe DiscourseNarrativeBot::TrackSelector do
 
           describe 'when asking discobot for help' do
             it 'should create the right reply' do
-              post.update!(raw: 'show me what you can do @discobot help')
+              post.update!(raw: 'show me what you can do @discobot display help')
               described_class.new(:reply, user, post_id: post.id).select
 
               expect(Post.last.raw).to include(help_message)
@@ -233,12 +237,12 @@ describe DiscourseNarrativeBot::TrackSelector do
             describe 'as an admin or moderator' do
               it 'should include the commands to start the advanced user track' do
                 user.update!(moderator: true)
-                post.update!(raw: 'Show me what you can do @discobot help')
+                post.update!(raw: 'Show me what you can do @discobot display help')
                 described_class.new(:reply, user, post_id: post.id).select
                 new_post = Post.last
 
                 expect(new_post.raw).to include(
-                  DiscourseNarrativeBot::AdvancedUserNarrative::RESET_TRIGGER
+                  DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger
                 )
               end
             end
@@ -256,12 +260,12 @@ describe DiscourseNarrativeBot::TrackSelector do
                   user
                 )
 
-                post.update!(raw: 'Show me what you can do @discobot help')
+                post.update!(raw: 'Show me what you can do @discobot display help')
                 described_class.new(:reply, user, post_id: post.id).select
                 new_post = Post.last
 
                 expect(new_post.raw).to include(
-                  DiscourseNarrativeBot::AdvancedUserNarrative::RESET_TRIGGER
+                  DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger
                 )
               end
             end
@@ -455,7 +459,7 @@ describe DiscourseNarrativeBot::TrackSelector do
 
         describe 'when asking discobot for help' do
           it 'should create the right reply' do
-            post.update!(raw: '@discobot help')
+            post.update!(raw: '@discobot display help')
             described_class.new(:reply, user, post_id: post.id).select
 
             expect(Post.last.raw).to eq(help_message)
