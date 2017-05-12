@@ -5,7 +5,13 @@ describe DiscourseNarrativeBot::TrackSelector do
   let(:discobot_user) { described_class.discobot_user }
   let(:narrative) { DiscourseNarrativeBot::NewUserNarrative.new }
 
-  def random_mention_reply
+  let(:random_mention_reply) do
+    I18n.t('discourse_narrative_bot.track_selector.random_mention.reply',
+     discobot_username: discobot_user.username
+    )
+  end
+
+  let(:help_message) do
     discobot_username = discobot_user.username
 
     end_message = <<~RAW
@@ -94,7 +100,7 @@ describe DiscourseNarrativeBot::TrackSelector do
           end
         end
 
-        describe 'when user thanks the bot' do
+        describe 'when user thank the bot' do
           it 'should like the post' do
             post.update!(raw: 'thanks!')
 
@@ -216,16 +222,48 @@ describe DiscourseNarrativeBot::TrackSelector do
             expect(new_post.raw).to eq(random_mention_reply)
           end
 
-          context 'when user is an admin or moderator' do
-            it 'should include the commands to start the advanced user track' do
-              user.update!(moderator: true)
-              post.update!(raw: 'Show me what you can do @discobot')
+          describe 'when asking discobot for help' do
+            it 'should create the right reply' do
+              post.update!(raw: 'show me what you can do @discobot help')
               described_class.new(:reply, user, post_id: post.id).select
-              new_post = Post.last
 
-              expect(new_post.raw).to include(
-                DiscourseNarrativeBot::AdvancedUserNarrative::RESET_TRIGGER
-              )
+              expect(Post.last.raw).to include(help_message)
+            end
+
+            describe 'as an admin or moderator' do
+              it 'should include the commands to start the advanced user track' do
+                user.update!(moderator: true)
+                post.update!(raw: 'Show me what you can do @discobot help')
+                described_class.new(:reply, user, post_id: post.id).select
+                new_post = Post.last
+
+                expect(new_post.raw).to include(
+                  DiscourseNarrativeBot::AdvancedUserNarrative::RESET_TRIGGER
+                )
+              end
+            end
+
+            describe 'as a user that has completed the new user track' do
+              it 'should include the commands to start the advanced user track' do
+                narrative.set_data(user,
+                  state: :end,
+                  topic_id: post.topic.id,
+                  track: "DiscourseNarrativeBot::NewUserNarrative",
+                )
+
+                BadgeGranter.grant(
+                  Badge.find_by(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME),
+                  user
+                )
+
+                post.update!(raw: 'Show me what you can do @discobot help')
+                described_class.new(:reply, user, post_id: post.id).select
+                new_post = Post.last
+
+                expect(new_post.raw).to include(
+                  DiscourseNarrativeBot::AdvancedUserNarrative::RESET_TRIGGER
+                )
+              end
             end
           end
 
@@ -297,29 +335,6 @@ describe DiscourseNarrativeBot::TrackSelector do
               end
             end
           end
-
-          context 'when user has completed the new user track' do
-            it 'should include the commands to start the advanced user track' do
-              narrative.set_data(user,
-                state: :end,
-                topic_id: post.topic.id,
-                track: "DiscourseNarrativeBot::NewUserNarrative",
-              )
-
-              BadgeGranter.grant(
-                Badge.find_by(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME),
-                user
-              )
-
-              post.update!(raw: 'Show me what you can do @discobot')
-              described_class.new(:reply, user, post_id: post.id).select
-              new_post = Post.last
-
-              expect(new_post.raw).to include(
-                DiscourseNarrativeBot::AdvancedUserNarrative::RESET_TRIGGER
-              )
-            end
-          end
         end
       end
 
@@ -375,7 +390,7 @@ describe DiscourseNarrativeBot::TrackSelector do
           expect(new_post.raw).to eq(random_mention_reply)
         end
 
-        describe 'rate limiting help message in public topic' do
+        describe 'rate limiting random reply message in public topic' do
           let(:topic) { Fabricate(:topic) }
           let(:other_post) { Fabricate(:post, raw: '@discobot show me something', topic: topic) }
           let(:post) { Fabricate(:post, topic: topic) }
@@ -384,7 +399,7 @@ describe DiscourseNarrativeBot::TrackSelector do
             $redis.flushall
           end
 
-          describe 'when help massage has been displayed in the last 6 hours' do
+          describe 'when random reply massage has been displayed in the last 6 hours' do
             it 'should not do anything' do
               $redis.set(
                 "#{described_class::PUBLIC_DISPLAY_BOT_HELP_KEY}:#{other_post.topic_id}",
@@ -401,7 +416,7 @@ describe DiscourseNarrativeBot::TrackSelector do
             end
           end
 
-          describe 'when help message has not been displayed in the last 6 hours' do
+          describe 'when random reply message has not been displayed in the last 6 hours' do
             it 'should create the right reply' do
               $redis.set(
                 "#{described_class::PUBLIC_DISPLAY_BOT_HELP_KEY}:#{other_post.topic_id}",
@@ -419,7 +434,7 @@ describe DiscourseNarrativeBot::TrackSelector do
             end
           end
 
-          describe 'when help message has been displayed in the last 10 replies' do
+          describe 'when random reply message has been displayed in the last 10 replies' do
             it 'should not do anything' do
               described_class.new(:reply, user, post_id: other_post.id).select
               expect(Post.last.raw).to eq(random_mention_reply)
@@ -435,6 +450,15 @@ describe DiscourseNarrativeBot::TrackSelector do
                 described_class.new(:reply, user, post_id: post.id).select
               end.to_not change { Post.count }
             end
+          end
+        end
+
+        describe 'when asking discobot for help' do
+          it 'should create the right reply' do
+            post.update!(raw: '@discobot help')
+            described_class.new(:reply, user, post_id: post.id).select
+
+            expect(Post.last.raw).to eq(help_message)
           end
         end
 

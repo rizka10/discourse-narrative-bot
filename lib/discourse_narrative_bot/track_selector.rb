@@ -94,7 +94,7 @@ module DiscourseNarrativeBot
       match_trigger?(@post.raw, "#{RESET_TRIGGER} #{klass::RESET_TRIGGER}")
     end
 
-    def bot_commands(display_help = true)
+    def bot_commands(hint = true)
       post_raw = @post.raw
 
       raw =
@@ -104,7 +104,13 @@ module DiscourseNarrativeBot
           DiscourseNarrativeBot::QuoteGenerator.generate(@user)
         elsif match_trigger?(post_raw, 'fortune')
           DiscourseNarrativeBot::Magic8Ball.generate_answer
-        elsif display_help
+        elsif match_trigger?(post_raw, 'help')
+          help_message
+        elsif hint
+          message = I18n.t(i18n_key('random_mention.reply'),
+            discobot_username: self.class.discobot_user.username
+          )
+
           if public_reply?
             key = "#{PUBLIC_DISPLAY_BOT_HELP_KEY}:#{@post.topic_id}"
             last_bot_help_post_number = $redis.get(key)
@@ -115,10 +121,10 @@ module DiscourseNarrativeBot
                  (1.day.to_i - $redis.ttl(key)) > 6.hours.to_i)
 
               $redis.setex(key, 1.day.to_i, @post.post_number)
-              help_message
+              message
             end
           else
-            help_message
+            message
           end
         end
 

@@ -103,6 +103,8 @@ en:
 
     track_selector:
       random_mention:
+        reply: |-
+          Did someone call for me? Find out what I can do with `@%{discobot_username} help`.
         tracks: |-
           Hi! I currently know how to do the following things:
 
