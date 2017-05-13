@@ -567,6 +567,24 @@ describe DiscourseNarrativeBot::TrackSelector do
             ))
           end
         end
+
+        describe 'when bot is asked to reset/start a track' do
+          describe 'when user likes a post containing a reset trigger' do
+            it 'should not start the track' do
+              another_post = Fabricate(:post,
+                user: Fabricate(:user),
+                topic: topic,
+                raw: "@discobot start new user"
+              )
+
+              user
+
+              expect do
+                PostAction.act(user, another_post, PostActionType.types[:like])
+              end.to_not change { Post.count }
+            end
+          end
+        end
       end
     end
 

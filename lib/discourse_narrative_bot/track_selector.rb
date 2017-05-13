@@ -27,10 +27,10 @@ module DiscourseNarrativeBot
       data = Store.get(@user.id)
 
       if @post && !is_topic_action?
-        return if reset_track
+        is_reply = @input == :reply
+        return if is_reply && reset_track
 
         topic_id = @post.topic_id
-        is_reply = @input == :reply
 
         if (data && data[:topic_id] == topic_id)
           state = data[:state]
