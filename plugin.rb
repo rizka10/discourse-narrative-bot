@@ -15,24 +15,30 @@ if Rails.env.development?
   end
 end
 
+require_relative 'lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
+
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-narrative-bot", "db", "fixtures").to_s
 
   Mime::Type.register "image/svg+xml", :svg
 
-  load File.expand_path('../jobs/bot_input.rb', __FILE__)
-  load File.expand_path('../jobs/narrative_timeout.rb', __FILE__)
-  load File.expand_path('../jobs/narrative_init.rb', __FILE__)
-  load File.expand_path('../jobs/onceoff/grant_badges.rb', __FILE__)
-  load File.expand_path("../lib/discourse_narrative_bot/actions.rb", __FILE__)
-  load File.expand_path("../lib/discourse_narrative_bot/base.rb", __FILE__)
-  load File.expand_path("../lib/discourse_narrative_bot/new_user_narrative.rb", __FILE__)
-  load File.expand_path("../lib/discourse_narrative_bot/advanced_user_narrative.rb", __FILE__)
-  load File.expand_path("../lib/discourse_narrative_bot/track_selector.rb", __FILE__)
-  load File.expand_path("../lib/discourse_narrative_bot/certificate_generator.rb", __FILE__)
-  load File.expand_path("../lib/discourse_narrative_bot/dice.rb", __FILE__)
-  load File.expand_path("../lib/discourse_narrative_bot/quote_generator.rb", __FILE__)
-  load File.expand_path("../lib/discourse_narrative_bot/magic_8_ball.rb", __FILE__)
+  [
+    '../jobs/bot_input.rb',
+    '../jobs/narrative_timeout.rb',
+    '../jobs/narrative_init.rb',
+    '../jobs/send_default_welcome_message.rb',
+    '../jobs/onceoff/grant_badges.rb',
+    '../lib/discourse_narrative_bot/actions.rb',
+    '../lib/discourse_narrative_bot/base.rb',
+    '../lib/discourse_narrative_bot/new_user_narrative.rb',
+    '../lib/discourse_narrative_bot/advanced_user_narrative.rb',
+    '../lib/discourse_narrative_bot/track_selector.rb',
+    '../lib/discourse_narrative_bot/certificate_generator.rb',
+    '../lib/discourse_narrative_bot/dice.rb',
+    '../lib/discourse_narrative_bot/quote_generator.rb',
+    '../lib/discourse_narrative_bot/magic_8_ball.rb',
+    '../lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
+  ].each { |path| load File.expand_path(path, __FILE__) }
 
   # Disable welcome message because that is what the bot is supposed to replace.
   SiteSetting.send_welcome_message = false
@@ -110,11 +116,16 @@ after_initialize do
   self.add_model_callback(User, :after_commit, on: :create) do
     return if SiteSetting.disable_discourse_narrative_bot_welcome_post
 
-    if enqueue_narrative_bot_job?
-      Jobs.enqueue(:narrative_init,
-        user_id: self.id,
-        klass: DiscourseNarrativeBot::NewUserNarrative.to_s
-      )
+    case SiteSetting.discourse_narrative_bot_welcome_post_type
+    when 'new_user_track'
+      if enqueue_narrative_bot_job?
+        Jobs.enqueue(:narrative_init,
+          user_id: self.id,
+          klass: DiscourseNarrativeBot::NewUserNarrative.to_s
+        )
+      end
+    when 'welcome_message'
+      Jobs.enqueue(:send_default_welcome_message, user_id: self.id)
     end
   end
 

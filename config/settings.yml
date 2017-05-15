@@ -4,6 +4,9 @@ plugins:
     client: true
   disable_discourse_narrative_bot_welcome_post:
     default: false
+  discourse_narrative_bot_welcome_post_type:
+    default: 'new_user_track'
+    enum: 'DiscourseNarrativeBot::WelcomePostTypeSiteSetting'
   discourse_narrative_bot_ignored_usernames:
     default: 'discourse'
     type: list
