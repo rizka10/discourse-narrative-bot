@@ -15,10 +15,10 @@ fi:
       name: Pätevyytensä osoittanut
       description: "Suoritti jatkokurssin"
       long_description: |
-        Tämä ansiomerkki myönnetään, kun suoritat  menestyksellä vuorovaikutteisen palstan käytön jatkokurssin. Olet omaksunut edistyneemmätkin toiminnot, ja olet taitosi osoittanut.
+        Tämä ansiomerkki myönnetään, kun suoritat menestyksellä vuorovaikutteisen palstan käytön jatkokurssin. Olet omaksunut edistyneemmätkin toiminnot, ja olet taitosi osoittanut.
 
-discourse_narrative_bot:
-    bio: "Moi! En ole ihminen. Olen botti. Jos haluat jutella, lähetä yksityisviesti tai mainitse **`@%{discobot_username}`** missä vain."
+  discourse_narrative_bot:
+    bio: "Moi! En ole ihminen. Olen botti, ja tarjoan opetusta sivuston käyttämisestä. Jos haluat jutella, lähetä yksityisviesti tai mainitse **`@%{discobot_username}`** missä vain."
 
     timeout:
       message: |-
@@ -111,9 +111,9 @@ discourse_narrative_bot:
         help_trigger: 'apua'
 
         reply: |-
-          Kutsuiko joku minua? Kysy mitä osaan tehdä kirjoittamalla `@%{discobot_username} %{help_trigger}`.
+          Moi! Jos haluat tietää mitä osaan, sano `@%{discobot_username} %{help_trigger}`.
         tracks: |-
-          Moi! Osaan nykyisellään seuraavat jutut:
+          Osaan nykyisellään seuraavat jutut:
 
           `@%{discobot_username} %{reset_trigger} %{default_track}`
           > Aloittaa yhden seuraavista opastetuista kierroksista: %{tracks}.
