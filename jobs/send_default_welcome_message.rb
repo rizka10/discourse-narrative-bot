@@ -6,7 +6,7 @@ module Jobs
         params = SystemMessage.new(user).defaults
 
         title = I18n.t("system_messages.#{type}.subject_template", params)
-        raw = I18n.t("system_messages.#{type}.text_body_template", params)
+        raw = I18n.t("discourse_narrative_bot.#{type}.text_body_template", params)
 
         PostCreator.create!(
           User.find(-2),
