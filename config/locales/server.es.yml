@@ -17,7 +17,7 @@ es:
       long_description: |
         Este distintivo se otorga a quienes han completado el tutorial de usuario avanzado. Has dominado las herramientas avanzadas de discusión — y ahora tú eres un licenciado!
   discourse_narrative_bot:
-    bio: "Hola, no soy una persona real. Soy un robot (bot). Para interactuar conmigo, me envías un mensaje o me mencionas **`@%{discobot_username}`** en cualquier lugar."
+    bio: "Hola, no soy una persona real. Soy un bot que puede enseñarte sobre este sitio. Para interactuar conmigo, me envías un mensaje o me mencionas **`@%{discobot_username}`** en cualquier lugar."
 
     timeout:
       message: |-
@@ -128,7 +128,7 @@ es:
         first_response: |-
           Hey, gracias por tu respuesta!
           Lamentablemente, como un robot con programación muy pobre, no he podido entender lo que me has dicho. :frowning:
-        track_response: Puedes intentarlo de nuevo, o bien saltar este paso, dime `%{skip_trigger}`. O también, para empezar de nuevo, dime `%{reset_trigger}`.
+        track_response: Puedes intentarlo de nuevo, o bien para saltar este paso, dime `%{skip_trigger}`. Para empezar de nuevo, dime `%{reset_trigger}`.
         second_response: |-
           Aw, lo siento. Sigo sin entenderlo. :anguished:
 
@@ -144,6 +144,7 @@ es:
         title: ":robot: Saludos!"
         message: |-
           Gracias por unirte a %{title}, y bienvenido!
+
           - Soy solo un robot, pero [nuestro amigable staff](/about) está también aquí para ayudar si necesitas contactar a una persona.
 
           - Por razones de seguridad, nosotros temporalmente limitamos lo que los nuevos usuarios pueden hacer. Tú podrás ganar nuevas habilidades (y [distintivos](/badges)) cuando te vayamos conociendo.
@@ -370,10 +371,10 @@ es:
           Whoops! No hubo ninguna encuesta en tu respuesta.
           Usa el ícono de engranaje: <img src="/images/font-awesome-gear.png" width="16" height="16"> en el editor, o bien copia y pega esta encuesta en tu próxima respuesta:
 
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
+              [poll]
+              * :cat:
+              * :dog:
+              [/poll]
         reply: |-
           Hey, ¡hermosa encuesta! ¿Cómo te enseñé?
               [poll]
