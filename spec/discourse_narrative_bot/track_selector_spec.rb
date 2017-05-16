@@ -126,7 +126,7 @@ describe DiscourseNarrativeBot::TrackSelector do
         end
 
         context 'when reply contains a reset trigger' do
-          it 'should start/reset the track' do
+          it 'should reset the track' do
             post.update!(
               raw: "#{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}"
             )
@@ -135,6 +135,48 @@ describe DiscourseNarrativeBot::TrackSelector do
 
             expect(DiscourseNarrativeBot::NewUserNarrative.new.get_data(user)['state'])
               .to eq("tutorial_bookmark")
+          end
+
+          describe 'reset trigger in surrounded by quotes' do
+            it 'should reset the track' do
+              post.update!(
+                raw: "'#{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}'"
+              )
+
+              described_class.new(:reply, user, post_id: post.id).select
+
+              expect(DiscourseNarrativeBot::NewUserNarrative.new.get_data(user)['state'])
+                .to eq("tutorial_bookmark")
+            end
+          end
+
+          describe 'reset trigger in a middle of a sentence' do
+            describe 'when post is less than reset trigger exact match limit' do
+              it 'should reset the track' do
+                post.update!(
+                  raw: "I would like to #{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger} now"
+                )
+
+                described_class.new(:reply, user, post_id: post.id).select
+
+                expect(DiscourseNarrativeBot::NewUserNarrative.new.get_data(user)['state'])
+                  .to eq("tutorial_bookmark")
+              end
+            end
+
+            describe 'when post exceeds reset trigger exact match limit' do
+              it 'should not reset the track' do
+                post.update!(
+                  raw: "I would like to #{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger} now #{'a' * described_class::RESET_TRIGGER_EXACT_MATCH_LENGTH}"
+                )
+
+                expect { described_class.new(:reply, user, post_id: post.id).select }
+                  .to change { Post.count }.by(1)
+
+                  expect(DiscourseNarrativeBot::NewUserNarrative.new.get_data(user)['state'])
+                    .to eq("tutorial_formatting")
+              end
+            end
           end
 
           context 'start/reset advanced track' do

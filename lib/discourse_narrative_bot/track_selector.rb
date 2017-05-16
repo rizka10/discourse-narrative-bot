@@ -15,6 +15,8 @@ module DiscourseNarrativeBot
       :topic_notification_level_changed
     ].each(&:freeze)
 
+    RESET_TRIGGER_EXACT_MATCH_LENGTH = 200
+
     def initialize(input, user, post_id:, topic_id: nil)
       @input = input
       @user = user
@@ -112,7 +114,14 @@ module DiscourseNarrativeBot
 
     def selected_track(klass)
       return if klass.respond_to?(:can_start?) && !klass.can_start?(@user)
-      match_trigger?(@post.raw, "#{self.class.reset_trigger} #{klass.reset_trigger}")
+      post_raw = @post.raw
+      trigger = "#{self.class.reset_trigger} #{klass.reset_trigger}"
+
+      if post_raw.length < RESET_TRIGGER_EXACT_MATCH_LENGTH && pm_to_bot?(@post)
+        post_raw.match(Regexp.new("\\b\\W\?#{trigger}\\W\?\\b", 'i'))
+      else
+        match_trigger?(post_raw, trigger)
+      end
     end
 
     def bot_commands(hint = true)
