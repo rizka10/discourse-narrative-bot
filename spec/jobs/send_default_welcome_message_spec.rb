@@ -17,6 +17,8 @@ RSpec.describe Jobs::SendDefaultWelcomeMessage do
       "discourse_narrative_bot.welcome_user.text_body_template",
       SystemMessage.new(user).defaults
     ).chomp)
+
+    expect(topic.closed).to eq(true)
   end
 
   describe 'for an invited user' do
@@ -36,6 +38,8 @@ RSpec.describe Jobs::SendDefaultWelcomeMessage do
         "discourse_narrative_bot.welcome_invite.text_body_template",
         SystemMessage.new(user).defaults
       ).chomp)
+
+      expect(topic.closed).to eq(true)
     end
   end
 end
