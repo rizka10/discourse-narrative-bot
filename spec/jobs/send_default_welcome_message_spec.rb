@@ -14,7 +14,7 @@ RSpec.describe Jobs::SendDefaultWelcomeMessage do
     ))
 
     expect(topic.first_post.raw).to eq(I18n.t(
-      "system_messages.welcome_user.text_body_template",
+      "discourse_narrative_bot.welcome_user.text_body_template",
       SystemMessage.new(user).defaults
     ).chomp)
   end
@@ -33,7 +33,7 @@ RSpec.describe Jobs::SendDefaultWelcomeMessage do
       ))
 
       expect(topic.first_post.raw).to eq(I18n.t(
-        "system_messages.welcome_invite.text_body_template",
+        "discourse_narrative_bot.welcome_invite.text_body_template",
         SystemMessage.new(user).defaults
       ).chomp)
     end
