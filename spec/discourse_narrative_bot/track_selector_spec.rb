@@ -508,6 +508,17 @@ describe DiscourseNarrativeBot::TrackSelector do
           end
         end
 
+        describe 'when asking discobot to start new user track' do
+          describe 'invalid text' do
+            it 'should not trigger the bot' do
+              post.update!(raw: '`@discobot start new user track`')
+
+              expect { described_class.new(:reply, user, post_id: post.id).select }
+                .to_not change { Post.count }
+            end
+          end
+        end
+
         describe 'when discobot is asked to roll dice' do
           it 'should create the right reply' do
             post.update!(raw: '@discobot roll 2d1')

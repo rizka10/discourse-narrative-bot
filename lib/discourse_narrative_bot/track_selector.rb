@@ -120,21 +120,19 @@ module DiscourseNarrativeBot
       if post_raw.length < RESET_TRIGGER_EXACT_MATCH_LENGTH && pm_to_bot?(@post)
         post_raw.match(Regexp.new("\\b\\W\?#{trigger}\\W\?\\b", 'i'))
       else
-        match_trigger?(post_raw, trigger)
+        match_trigger?(trigger)
       end
     end
 
     def bot_commands(hint = true)
-      post_raw = @post.raw
-
       raw =
-        if match_data = match_trigger?(post_raw, "#{self.class.dice_trigger} (\\d+)d(\\d+)")
+        if match_data = match_trigger?("#{self.class.dice_trigger} (\\d+)d(\\d+)")
           DiscourseNarrativeBot::Dice.roll(match_data[1].to_i, match_data[2].to_i)
-        elsif match_trigger?(post_raw, self.class.quote_trigger)
+        elsif match_trigger?(self.class.quote_trigger)
           DiscourseNarrativeBot::QuoteGenerator.generate(@user)
-        elsif match_trigger?(post_raw, self.class.magic_8_ball_trigger)
+        elsif match_trigger?(self.class.magic_8_ball_trigger)
           DiscourseNarrativeBot::Magic8Ball.generate_answer
-        elsif match_trigger?(post_raw, self.class.help_trigger)
+        elsif match_trigger?(self.class.help_trigger)
           help_message
         elsif hint
           message = I18n.t(self.class.i18n_key('random_mention.reply'),
@@ -236,11 +234,13 @@ module DiscourseNarrativeBot
       end
     end
 
-    def match_trigger?(text, trigger)
-      match = text.match(Regexp.new("@#{self.class.discobot_user.username} #{trigger}", 'i'))
+    def match_trigger?(trigger)
+      discobot_username = self.class.discobot_user.username
+      regexp = Regexp.new("<a class=\"mention\".*>@#{discobot_username}</a> #{trigger}", 'i')
+      match = @post.cooked.match(regexp)
 
       if pm_to_bot?(@post)
-        match || text.strip.match(Regexp.new("^#{trigger}$", 'i'))
+        match || @post.raw.strip.match(Regexp.new("^#{trigger}$", 'i'))
       else
         match
       end
