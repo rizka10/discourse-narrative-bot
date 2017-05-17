@@ -105,35 +105,6 @@ en:
       result: |-
         > :crystal_ball: %{result}
 
-    welcome_user:
-      text_body_template: |
-        Thanks for joining %{site_name}, and welcome!
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
-
-        Enjoy your stay!
-
-        (I’m only a robot, but [our friendly staff](/about) are also here to help if you need to reach a person.)
-    welcome_invite:
-      text_body_template: |
-        Thanks for accepting your invitation to %{site_name} -- welcome!
-
-        - We've created this new account **%{username}** for you. Change your name or password by visiting [your user profile][prefs].
-
-        - When you log in, please **use the same email address from your original invitation** — otherwise we won't be able to tell it's you!
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
-
-        Enjoy your stay!
-
-        (I’m only a robot, but [our friendly staff](/about) are also here to help if you need to reach a person.)
-
-        [prefs]: %{user_preferences_url}
-
     track_selector:
       reset_trigger: 'start'
       skip_trigger: 'skip'

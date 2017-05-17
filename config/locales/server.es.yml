@@ -103,31 +103,6 @@ es:
       result: |-
         > :crystal_ball: %{result}
 
-    welcome_user:
-      text_body_template: |
-        Gracias por unirte a %{site_name}, y bienvenido!
-        %{new_user_tips}
-        Creemos en el [comportamiento de una comunidad civilizada](%{base_url}/guidelines) en todo momento.
-        ¡Disfruta tu estadía!
-        (Soy solo un robot, pero [nuestro amigable staff](/about) también está aquí para ayudarte si necesitas contactar a una persona.)
-    welcome_invite:
-      text_body_template: |
-        Gracias por aceptar la invitación a %{site_name} -- bienvenido!
-
-        - Hemos creado esta nueva cuenta **%{username}** para tí. Cambia tu nombre o tu contraseña ingresando a [tu perfil][prefs].
-
-        - Cuando ingreses al foro, por favor **usa la misma dirección de correo que se usó en tu invitación original** — si usas otro email, no podemos saber que eres tú!
-
-        %{new_user_tips}
-
-        Creemos en el [comportamiento de una comunidad civilizada](%{base_url}/guidelines) en todo momento.
-
-        ¡Disfruta tu estadía!
-
-        (Soy solo un robot, pero [nuestro amigable staff](/about) también está aquí para ayudarte si necesitas contactar a una persona.)
-
-        [prefs]: %{user_preferences_url}
-
     track_selector:
       reset_trigger: 'empezar'
       skip_trigger: 'saltar'
@@ -333,7 +308,7 @@ es:
       start_message: |-
         Como un usuario _avanzado_, ¿no has visitado [tus preferencias](/my/preferences) aún @%{username}? Hay muchas formas de personalizar tu experiencia, por ejemplo podrías elegir un diseño oscuro.
         ¡Pero yo divago, comencemos!
-      
+
       edit:
         bot_created_post_raw: "@%{discobot_username} es, por lejos, el mejor bot que conozco :wink:"
         instructions: |-
@@ -345,7 +320,7 @@ es:
         reply: |-
           ¡Buen trabajo!
           Tenga en cuenta que las ediciones realizadas después de 5 minutos aparecerán como revisiones de edición pública y aparecerá un pequeño ícono de lápiz en la parte superior derecha con el recuento de revisiones.
-      
+
       delete:
         instructions: |-
           Si deseas retirar una publicación que hayas realizado, puedes eliminarla.
@@ -378,7 +353,7 @@ es:
               Yo puedo crear un enlace a la categoría con #
         reply: |-
           ¡Excelente! Recuerda que ésto funciona para ambos, categorías _y_ etiquetas, si las etiquetas están disponibles.
-      
+
       change_topic_notification_level:
         instructions: |-
           Cada tema tiene un nivel de notificación. Comienza en 'normal', lo que significa que normalmente sólo se notificará cuando alguien está hablando directamente con usted.
@@ -389,7 +364,7 @@ es:
         reply: |-
           ¡Impresionante trabajo! Espero que no silencies este tema ya que puedo ser un poco hablador a veces :grin:.
           Tenga en cuenta que cuando responde a un tema o lee un tema durante más de unos minutos, se establece automáticamente en un nivel de notificación de "seguimiento". Puedes cambiar esto en [tus preferencias de usuario](/my/preferences).
-      
+
       poll:
         instructions: |-
           ¿Sabes que puedes agregar una encuesta en cualquier mensaje? Intenta usando el botón de engranaje <img src="/images/font-awesome-gear.png" width="16" height="16"> en el editor para **armar una encuesta**.
@@ -407,7 +382,7 @@ es:
               * :+1:
               * :-1:
               [/poll]
-      
+
       details:
         instructions: |-
           A veces, tú puedes decidir **ocultar detalles** en tus respuestas:
@@ -431,7 +406,7 @@ es:
               [/details]
         reply: |-
           ¡Gran trabajo — tu atención a los _detalles_ es admirable!
-      
+
       end:
         message: |-
           Usted ha brillado a través de esto como un _usuario avanzado_ de hecho :bow:
@@ -441,7 +416,6 @@ es:
           Eso es todo lo que tengo para ti.
 
           ¡Adiós por ahora! Si desea hablar conmigo de nuevo, envíeme un mensaje en cualquier momento :sunglasses:
-      
+
       certificate:
         alt: 'Advanced User Track Certificate of Achievement'
-        
