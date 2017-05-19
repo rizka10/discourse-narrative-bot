@@ -269,7 +269,8 @@ es:
 
       search:
         instructions: |-
-          _psst_ … Te he ocultado una sorpresa en una de mis respuestas previas. Si aceptas el reto, **selecciona el icono de búsqueda** <img src="/images/font-awesome-search.png" width="16" height="16"> en la parte superior &#8599; y busca lo siguiente.
+          _psst_ … Te he ocultado una sorpresa en este tema. Si aceptas el reto, **selecciona el icono de búsqueda** <img src="/images/font-awesome-search.png" width="16" height="16"> en la parte superior &#8599; y busca lo siguiente.
+          
           Prueba buscar el término "capy&#8203;bara" en este tema
         hidden_message: |-
           Cómo te perdiste este capybara? :wink:
