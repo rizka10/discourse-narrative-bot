@@ -156,6 +156,13 @@ module DiscourseNarrativeBot
       set_state_data(:post_version, post.reload.version || 0)
     end
 
+    def clean_up_tutorial_search
+      first_post = @post.topic.first_post
+      first_post.revert_to(get_state_data(:post_version) - 1)
+      first_post.save!
+      first_post.publish_change_to_clients!(:revised)
+    end
+
     def say_hello
       raw = I18n.t(
         "#{I18N_KEY}.hello.message",
@@ -471,15 +478,7 @@ module DiscourseNarrativeBot
 
       if @post.raw.match(/#{SEARCH_ANSWER}/)
         fake_delay
-
-        reply = reply_to(@post, I18n.t("#{I18N_KEY}.search.reply", search_url: url_helpers(:search_url)))
-
-        first_post = @post.topic.first_post
-        first_post.revert_to(get_state_data(:post_version) - 1)
-        first_post.save!
-        first_post.publish_change_to_clients! :revised
-
-        reply
+        reply_to(@post, I18n.t("#{I18N_KEY}.search.reply", search_url: url_helpers(:search_url)))
       else
         fake_delay
         reply_to(@post, I18n.t("#{I18N_KEY}.search.not_found")) unless @data[:attempted]

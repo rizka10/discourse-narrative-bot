@@ -828,30 +828,34 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      describe 'when reply contains the skip trigger' do
-        it 'should create the right reply' do
+      describe 'when post contain the right answer' do
+        let(:post) { Fabricate(:post, user: described_class.discobot_user, topic: topic) }
+        let(:flag) { Fabricate(:flag, post: post, user: user) }
+
+        before do
+          narrative.set_data(user,
+            state: :tutorial_flag,
+            topic_id: topic.id
+          )
+
+          DiscourseNarrativeBot::TrackSelector.new(:flag, user, post_id: flag.post_id).select
+
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)
+
+          expect(post.reload.topic.first_post.raw).to include(I18n.t(
+            "discourse_narrative_bot.new_user_narrative.search.hidden_message"
+          ))
+        end
+
+        it 'should clean up if the tutorial is skipped' do
           post.update!(raw: skip_trigger)
 
-          expect { DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select }
-            .to change { Post.count }.by(1)
+          expect do
+            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          end.to change { Post.count }.by(1)
 
+          expect(first_post.reload.raw).to eq('Hello world')
           expect(narrative.get_data(user)[:state].to_sym).to eq(:end)
-        end
-      end
-
-      describe 'when post contain the right answer' do
-        before do
-          PostRevisor.new(first_post, topic).revise!(
-            described_class.discobot_user,
-            { raw: 'something funny' },
-            { skip_validations: true, force_new_version: true }
-          )
-
-          narrative.set_data(user,
-            state: :tutorial_search,
-            topic_id: topic.id,
-            tutorial_search: { post_version: first_post.version }
-          )
         end
 
         it 'should create the right reply' do
@@ -859,7 +863,10 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             raw: "#{described_class::SEARCH_ANSWER} this is a capybara"
           )
 
-          expect { narrative.input(:reply, user, post: post) }.to change { Post.count }.by(2)
+          expect do
+            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          end.to change { Post.count }.by(2)
+
           new_post = Post.offset(1).last
 
           expect(new_post.raw).to eq(I18n.t(
@@ -869,10 +876,10 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           expect(first_post.reload.raw).to eq('Hello world')
 
-          expect(narrative.get_data(user)).to eq({
+          expect(narrative.get_data(user)).to include({
             "state" => "end",
             "topic_id" => new_post.topic_id,
-            "track" => described_class.to_s
+            "track" => described_class.to_s,
           })
 
           expect(user.badges.where(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?)

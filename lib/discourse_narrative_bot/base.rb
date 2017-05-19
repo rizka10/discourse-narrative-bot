@@ -39,15 +39,14 @@ module DiscourseNarrativeBot
 
           if new_post
             old_state = old_data[:state]
+            state_changed = (old_state.to_s != next_state.to_s)
+            clean_up_state(old_state) if state_changed
+
             @state = @data[:state] = next_state
             @data[:last_post_id] = new_post.id
             set_data(@user, @data)
 
-            if self.class.private_method_defined?("init_#{next_state}") &&
-              old_state.to_s != next_state.to_s
-
-              self.send("init_#{next_state}")
-            end
+            init_state(next_state) if state_changed
 
             if next_state == :end
               end_reply
@@ -112,7 +111,7 @@ module DiscourseNarrativeBot
       "<img class='discobot-certificate' src='#{src}' width='650' height='464' alt='#{I18n.t("#{self.class::I18N_KEY}.certificate.alt")}'>"
     end
 
-    private
+    protected
 
     def set_state_data(key, value)
       @data[@state] ||= {}
@@ -176,6 +175,18 @@ module DiscourseNarrativeBot
 
     def not_implemented
       raise 'Not implemented.'
+    end
+
+    private
+
+    def clean_up_state(state)
+      clean_up_method = "clean_up_#{state}"
+      self.send(clean_up_method) if self.class.private_method_defined?(clean_up_method)
+    end
+
+    def init_state(state)
+      init_method = "init_#{state}"
+      self.send(init_method) if self.class.private_method_defined?(init_method)
     end
   end
 end
