@@ -374,7 +374,9 @@ en:
         not_found: |-
           Hmm, I don’t see a category in there anywhere. Note that `#` can't be the first character. Can you copy this in your next reply?
 
-              I can create a category link via #
+          ```text
+          I can create a category link via #
+          ```
         reply: |-
           Excellent! Remember this works for both categories _and_ tags, if tags are enabled.
 
@@ -400,10 +402,12 @@ en:
 
           Use the <img src="/images/font-awesome-gear.png" width="16" height="16"> gear icon in the editor, or copy and paste this poll in your next reply:
 
-              [poll]
-              * :cat:
-              * :dog:
-              [/poll]
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hey, nice poll! How’d I do in teaching you?
 
@@ -429,9 +433,11 @@ en:
         not_found: |-
           Having trouble creating a details widget? Try including the following in your next reply:
 
-              [details=Select me for details]
-              Here are the details
-              [/details]
+          ```text
+          [details=Select me for details]
+          Here are the details
+          [/details]
+          ```
         reply: |-
           Great work — your attention to _detail_ is admirable!
       end:
