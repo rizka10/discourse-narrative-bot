@@ -4,6 +4,7 @@ fi:
     disable_discourse_narrative_bot_welcome_post: "Estä bottia lähettämästä tervetuloviestejä"
     discourse_narrative_bot_ignored_usernames: "Käyttäjänimet, jotka botin tulisi jättää huomiotta"
     discourse_narrative_bot_disable_public_replies: "Estä bottia vastaamasta julkisesti ketjuihin"
+    discourse_narrative_bot_welcome_post_type: "Minkätyyppisen tervetuloviestin botti lähettää"
 
   badges:
     certified:
@@ -283,7 +284,7 @@ fi:
 
       search:
         instructions: |-
-          _psst_ … Tein jekun yhteen aiemmista vastauksistani. Jos olet valmis ottamaan haasteen vastaan, oikealla ylhäällä &#8599; on **hakukuvake** <img src="/images/font-awesome-search.png" width="16" height="16">, jolla voit yrittää löytää sen.
+          _psst_ … Tein pienen jekun tähän ketjuun. Jos olet valmis ottamaan haasteen vastaan, oikealla ylhäällä &#8599; on **hakukuvake** <img src="/images/font-awesome-search.png" width="16" height="16">, jolla voit yrittää löytää sen.
 
           Etsi hakusanaa "kapy&#8203;bara" tästä ketjusta
         hidden_message: |-
@@ -373,7 +374,9 @@ fi:
         not_found: |-
           Höh, en näe viittauksia alueisiin. Huomioi, ettei `#` saa olla rivinsä ensimmäinen merkki. Kopioisitko tämän seuraavaan vastaukseesi?
 
-              Voin linkittää alueeseen näppäilemällä #
+              ```text
+              I can create a category link via #
+              ```
         reply: |-
           Erinomaista! Muista, että tämä toimii alueiden lisäksi myös tunnisteille, jos ne ovat käytössä täällä.
 
@@ -399,10 +402,12 @@ fi:
 
           Käytä editorin <img src="/images/font-awesome-gear.png" width="16" height="16"> hammasrataskuvaketta tai kopioi tämä äänestys ja liitä se seuraavaan vastaukseesi:
 
-              [poll]
-              * :cat:
-              * :dog:
-              [/poll]
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hauska äänestys! Miten onnistuin opetuksessa?
 
@@ -428,9 +433,11 @@ fi:
         not_found: |-
           Onko ongelmia yksityiskohtatoiminnon kanssa? Kokeilepa laittaa tämä seuraavaan vastaukseesi:
 
-              [details=Paina niin saat tarkempaa tietoa]
-              Yksityiskohtaista tietoa
-              [/details]
+          ```text
+          [details=Paina niin saat tarkempaa tietoa]
+          Yksityiskohtaista tietoa
+          [/details]
+          ```
         reply: |-
           Hyvin tehty - panostustasi _yksityiskohtiin_ on pakko arvostaa!
       end:
